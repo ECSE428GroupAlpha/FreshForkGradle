@@ -21,7 +21,7 @@ public class UserRestController {
 		Users tempUser = freshfork.createUser(username, email, password, isPro);
 		//Returns Dto is user was succesfully created, null otherwise
 		if(tempUser != null) {
-			UserDto returnUser = new UserDto(username, email, isPro);
+			UserDto returnUser = new UserDto(tempUser.getUId(), username, email, isPro);
 			return returnUser;
 		}
 		else {

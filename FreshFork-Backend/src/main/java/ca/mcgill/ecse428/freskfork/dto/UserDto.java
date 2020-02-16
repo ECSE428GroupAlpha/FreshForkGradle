@@ -1,6 +1,7 @@
 package ca.mcgill.ecse428.freskfork.dto;
 
 public class UserDto {
+	private int uId;
 	private String name;
 	private String email;
 	private boolean isPro;
@@ -8,10 +9,14 @@ public class UserDto {
 	public UserDto() {
 	}
 
-	public UserDto(String name, String email, boolean isPro) {
+	public UserDto(int uId, String name, String email, boolean isPro) {
+		this.uId = uId;
 		this.name = name;
 		this.email = email;
 		this.isPro = isPro;
+	}
+	public int getUId() {
+		return uId;
 	}
 	public String getName() {
 		return name;
