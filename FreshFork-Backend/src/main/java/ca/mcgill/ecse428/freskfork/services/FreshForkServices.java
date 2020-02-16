@@ -5,11 +5,7 @@ import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.mcgill.ecse428.freskfork.dao.DietRepository;
-import ca.mcgill.ecse428.freskfork.dao.IngredientRepository;
-import ca.mcgill.ecse428.freskfork.dao.IngredientUsageRepository;
-import ca.mcgill.ecse428.freskfork.dao.RecipeRepository;
-import ca.mcgill.ecse428.freskfork.dao.UsersRepository;
+import ca.mcgill.ecse428.freskfork.dao.*;
 import ca.mcgill.ecse428.freskfork.model.*;
 
 import java.util.*;
@@ -54,13 +50,20 @@ public class FreshForkServices {
 	// RECIPE METHODS
 
 	@Transactional
-	public Recipe createRecipe(String author, String recipeSteps, String rating) {
+	public Recipe createRecipe(int author, String recipeSteps, String rating) {
 		Recipe recipe = new Recipe();
-		Users Users = usersRepository.findByName(author);
-		recipe.setRecipeSteps(recipeSteps);
-		recipe.setRating(rating);
-		return recipeRepository.save(recipe);
-		
+
+		Users user = usersRepository.findByUID(author);
+		//Checks if user is pro first, otherwise return null
+		if(user.isIsPro()) {
+			recipe.setAuthor(user);
+			recipe.setRecipeSteps(recipeSteps);
+			recipe.setRating(rating);
+			return recipeRepository.save(recipe);
+		}
+		else {
+			throw new IllegalArgumentException("User is not a professional");
+		}
 	}
 
 	@Transactional
