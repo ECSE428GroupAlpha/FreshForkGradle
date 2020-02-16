@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Id;
 
 @Entity
-public class User{
+public class Users{
 private Set<Diet> diet;
 
 @ManyToMany

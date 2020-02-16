@@ -9,9 +9,8 @@ import ca.mcgill.ecse428.freskfork.dao.DietRepository;
 import ca.mcgill.ecse428.freskfork.dao.IngredientRepository;
 import ca.mcgill.ecse428.freskfork.dao.IngredientUsageRepository;
 import ca.mcgill.ecse428.freskfork.dao.RecipeRepository;
-import ca.mcgill.ecse428.freskfork.dao.UserRepository;
-import ca.mcgill.ecse428.freskfork.model.Recipe;
-import ca.mcgill.ecse428.freskfork.model.User;
+import ca.mcgill.ecse428.freskfork.dao.UsersRepository;
+import ca.mcgill.ecse428.freskfork.model.*;
 
 import java.util.*;
 
@@ -30,26 +29,26 @@ public class FreshForkServices {
 	RecipeRepository recipeRepository;
 
 	@Autowired
-	UserRepository userRepository;
+	UsersRepository usersRepository;
 
 
-	// USER METHODS
+	// Users METHODS
 
 	@Transactional
-	public User createUser(String name, String email, String password, boolean isPro) {
-		User user = new User();
+	public Users createUser(String name, String email, String password, boolean isPro) {
+		Users Users = new Users();
 		
-		if(userRepository.findAllByEmail(email).size() == 1) {
+		if(usersRepository.findAllByEmail(email).size() == 1) {
 			throw new IllegalArgumentException("Email is already taken.");
 		}
 		else {
-			user.setName(name);
-			user.setEmail(email);
-			user.setPassword(password);
-			user.setIsPro(isPro);
+			Users.setName(name);
+			Users.setEmail(email);
+			Users.setPassword(password);
+			Users.setIsPro(isPro);
 		}
 		
-		return userRepository.save(user);
+		return usersRepository.save(Users);
 	}
 
 	// RECIPE METHODS
@@ -57,7 +56,7 @@ public class FreshForkServices {
 	@Transactional
 	public Recipe createRecipe(String author, String recipeSteps, String rating) {
 		Recipe recipe = new Recipe();
-		User user = userRepository.findByName(author);
+		Users Users = usersRepository.findByName(author);
 		recipe.setRecipeSteps(recipeSteps);
 		recipe.setRating(rating);
 		return recipeRepository.save(recipe);
@@ -90,14 +89,14 @@ public class FreshForkServices {
 	// AUTHENTICATION
 
 	@Transactional
-	public boolean authenticateUser(String email, String password) {
-		User user = userRepository.findByEmail(email);
+	public boolean authenticateUsers(String email, String password) {
+		Users Users = usersRepository.findByEmail(email);
 		
-		if(user == null) {
+		if(Users == null) {
 			throw new IllegalArgumentException("Account with given email does not exist.");
 		}
 		else {
-			if(password.equals(user.getPassword())) {
+			if(password.equals(Users.getPassword())) {
 				return true;
 			}
 			else {

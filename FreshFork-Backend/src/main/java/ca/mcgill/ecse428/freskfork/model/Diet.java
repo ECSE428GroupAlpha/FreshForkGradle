@@ -7,15 +7,15 @@ import javax.persistence.Id;
 
 @Entity
 public class Diet{
-private Set<User> user;
+private Set<Users> Users;
 
 @ManyToMany(mappedBy="diet")
-public Set<User> getUser() {
-   return this.user;
+public Set<Users> getUsers() {
+   return this.Users;
 }
 
-public void setUser(Set<User> users) {
-   this.user = users;
+public void setUsers(Set<Users> Userss) {
+   this.Users = Userss;
 }
 
 private Set<Recipe> recipe;

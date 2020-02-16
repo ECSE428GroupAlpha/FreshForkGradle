@@ -23,25 +23,25 @@ public void setDiet(Set<Diet> diets) {
    this.diet = diets;
 }
 
-private User author;
+private Users author;
 
 @ManyToOne(optional=false)
-public User getAuthor() {
+public Users getAuthor() {
    return this.author;
 }
 
-public void setAuthor(User author) {
+public void setAuthor(Users author) {
    this.author = author;
 }
 
-private Set<User> favoritedBy;
+private Set<Users> favoritedBy;
 
 @ManyToMany(mappedBy="favoriteREcipes")
-public Set<User> getFavoritedBy() {
+public Set<Users> getFavoritedBy() {
    return this.favoritedBy;
 }
 
-public void setFavoritedBy(Set<User> favoritedBys) {
+public void setFavoritedBy(Set<Users> favoritedBys) {
    this.favoritedBy = favoritedBys;
 }
 

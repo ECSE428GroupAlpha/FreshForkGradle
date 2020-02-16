@@ -8,5 +8,5 @@ import ca.mcgill.ecse428.freskfork.model.Recipe;
 
 public interface RecipeRepository extends CrudRepository<Recipe, String> {
     Recipe findByRecipeID(int id);
-    List<Recipe> listByDiet(String diet);
+    //List<Recipe> listByDiet(String diet);
 }
