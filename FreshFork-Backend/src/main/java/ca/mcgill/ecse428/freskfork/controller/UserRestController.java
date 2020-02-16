@@ -30,10 +30,10 @@ public class UserRestController {
 	}
 	
 	@PostMapping("/users/createRecipe")
-	public RecipeDto createRecipeController(@RequestParam(name = "authorID") int creator, @RequestParam(name = "author") String author, @RequestParam(name = "steps") String recipeSteps, @RequestParam(name = "rating") String rating) {
+	public RecipeDto createRecipeController(@RequestParam(name = "authorID") int creatorID, @RequestParam(name = "author") String author, @RequestParam(name = "steps") String recipeSteps, @RequestParam(name = "rating") String rating) {
 		//Try to create recipe, if we get an exception pass it up to front end
 		try {
-			Recipe tempRecipe = freshfork.createRecipe(creator, recipeSteps, rating);
+			Recipe tempRecipe = freshfork.createRecipe(creatorID, author, recipeSteps, rating);
 			RecipeDto returnRecipe = new RecipeDto(author, recipeSteps, rating, tempRecipe.getRecipeID());
 			return returnRecipe;
 		}

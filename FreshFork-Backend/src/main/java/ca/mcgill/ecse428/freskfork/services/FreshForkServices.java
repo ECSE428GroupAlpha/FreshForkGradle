@@ -50,15 +50,16 @@ public class FreshForkServices {
 	// RECIPE METHODS
 
 	@Transactional
-	public Recipe createRecipe(int author, String recipeSteps, String rating) {
+	public Recipe createRecipe(int userID, String recipeName, String recipeSteps, String rating) {
 		Recipe recipe = new Recipe();
-		Users user = usersRepository.findByUId(author);
+		Users user = usersRepository.findByUId(userID);
 		if(user == null) {
 			throw new IllegalArgumentException("User does not exist");
 		}
 
 		//Checks if user is pro first, otherwise return null
 		if(user.isIsPro()) {
+			recipe.setName(recipeName);
 			recipe.setAuthor(user);
 			recipe.setRecipeSteps(recipeSteps);
 			recipe.setRating(rating);
