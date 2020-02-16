@@ -56,6 +56,7 @@ public class FreshForkServices {
 		if(user == null) {
 			throw new IllegalArgumentException("User does not exist");
 		}
+
 		//Checks if user is pro first, otherwise return null
 		if(user.isIsPro()) {
 			recipe.setAuthor(user);
