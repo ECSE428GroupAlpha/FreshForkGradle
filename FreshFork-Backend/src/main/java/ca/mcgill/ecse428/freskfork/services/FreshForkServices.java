@@ -53,7 +53,7 @@ public class FreshForkServices {
 	public Recipe createRecipe(int author, String recipeSteps, String rating) {
 		Recipe recipe = new Recipe();
 
-		Users user = usersRepository.findByUID(author);
+		Users user = usersRepository.findByUId(author);
 		//Checks if user is pro first, otherwise return null
 		if(user.isIsPro()) {
 			recipe.setAuthor(user);
