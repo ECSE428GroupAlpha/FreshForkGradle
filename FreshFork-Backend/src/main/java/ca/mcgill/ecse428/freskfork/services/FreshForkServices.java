@@ -55,13 +55,19 @@ public class FreshForkServices {
 	// RECIPE METHODS
 
 	@Transactional
-	public Recipe createRecipe(String author, String recipeSteps, String rating) {
+	public Recipe createRecipe(int author, String recipeSteps, String rating) {
 		Recipe recipe = new Recipe();
-		User user = userRepository.findByName(author);
-		recipe.setRecipeSteps(recipeSteps);
-		recipe.setRating(rating);
-		return recipeRepository.save(recipe);
-		
+		User user = userRepository.findByUID(author);
+		//Checks if user is pro first, otherwise return null
+		if(user.isIsPro()) {
+			recipe.setAuthor(user);
+			recipe.setRecipeSteps(recipeSteps);
+			recipe.setRating(rating);
+			return recipeRepository.save(recipe);
+		}
+		else {
+			throw new IllegalArgumentException("User is not a professional");
+		}
 	}
 
 	@Transactional

@@ -5,9 +5,6 @@ public class RecipeDto {
 	private String recipeSteps;
 	private String rating;
 	private int recipeID;
-	
-	public RecipeDto() {
-	}
 
 	public RecipeDto(String name, String recipeSteps, String rating, int recipeID) {
 		this.name = name;
