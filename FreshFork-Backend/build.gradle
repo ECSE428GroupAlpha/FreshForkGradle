@@ -21,10 +21,6 @@ dependencies {
 	}
 }
 
-task stage () {
-    dependsOn ':FreshFork-Backend:assemble'
-}
-
 test {
 	useJUnitPlatform()
 }
