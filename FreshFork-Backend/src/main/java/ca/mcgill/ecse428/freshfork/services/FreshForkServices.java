@@ -116,7 +116,7 @@ public class FreshForkServices {
 			dietRepository.save(dietToAdd);
 		}
 		
-		return recipeRepository.save(recipeToAddTo);
+		return recipeToAddTo;
 	}
 	
 	//DIET METHODS
