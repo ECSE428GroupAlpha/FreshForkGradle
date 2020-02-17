@@ -40,7 +40,7 @@ public class UserRestController {
 		}
 	}
 	
-	//http://localhost:6212/users/createRecipe?authorID=1&author=edward&steps=adshasdh&rating=1
+	//http://localhost:6212/users/createRecipe?authorID=1&recipename=chicken&steps=adshasdh&rating=1
 	@PostMapping("/users/createRecipe")
 	public RecipeDto createRecipeController(@RequestParam(name = "authorID") int creatorID, @RequestParam(name = "recipename") String recipename, @RequestParam(name = "steps") String recipeSteps, @RequestParam(name = "rating") String rating) {
 		//Try to create recipe, if we get an exception pass it up to front end
@@ -133,9 +133,7 @@ public class UserRestController {
 	}
 	
 	@GetMapping("/login")
-	public LoginDto loginController(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) {
-		LoginDto loginDto = new LoginDto(freshfork.authenticateUsers(email, password));
-			
-		return loginDto;
+	public void loginController(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) {
+		freshfork.authenticateUsers(email, password);
 	}
 }

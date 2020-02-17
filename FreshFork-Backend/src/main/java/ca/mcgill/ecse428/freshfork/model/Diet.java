@@ -12,7 +12,7 @@ import javax.persistence.Id;
 public class Diet{
 private Set<Users> Users;
 
-@ManyToMany(mappedBy="diet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+@ManyToMany(mappedBy="diet")
 public Set<Users> getUsers() {
    return this.Users;
 }
