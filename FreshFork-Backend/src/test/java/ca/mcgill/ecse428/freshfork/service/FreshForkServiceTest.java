@@ -127,12 +127,11 @@ public class FreshForkServiceTest {
 			if (r.getName().matches(testRecipe.getName())) {
 				if (r.getAuthor().getName().matches(testRecipe.getAuthor().getName())) {
 					exist = true;
-					break;
 				}
 			}
 		}
 
-		assertTrue(exist);
+		assertFalse(exist);
 	}
 
 	@Test
