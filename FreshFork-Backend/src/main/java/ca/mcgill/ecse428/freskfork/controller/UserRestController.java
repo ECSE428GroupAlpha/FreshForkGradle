@@ -131,4 +131,11 @@ public class UserRestController {
 		
 		return recipeDtos;
 	}
+	
+	@GetMapping("/login")
+	public LoginDto loginController(@RequestParam(name = "email") String email, @RequestParam(name = "password") String password) {
+		LoginDto loginDto = new LoginDto(freshfork.authenticateUsers(email, password));
+			
+		return loginDto;
+	}
 }
