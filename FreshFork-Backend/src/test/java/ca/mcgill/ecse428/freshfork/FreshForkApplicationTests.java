@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.freskfork;
+package ca.mcgill.ecse428.freshfork;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

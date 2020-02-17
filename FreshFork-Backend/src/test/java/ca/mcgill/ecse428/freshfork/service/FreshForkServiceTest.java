@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.freskfork.service;
+package ca.mcgill.ecse428.freshfork.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
