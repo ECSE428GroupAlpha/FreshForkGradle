@@ -45,10 +45,10 @@ public class FreshForkServiceTest {
 	
 	@Autowired
 	FreshForkServices testService;
-	
+
 	@Autowired
 	DietRepository dietRepository;
-	
+
 	@Autowired
 	IngredientUsageRepository ingredientUsageRepository;
 
@@ -67,7 +67,6 @@ public class FreshForkServiceTest {
 		Users nonProUser = testService.createUser(user2, user2Email, user2Password, false);
 		IllegalArgumentException e1 = new IllegalArgumentException("User is not a professional");
 		IllegalArgumentException e2 = new IllegalArgumentException("User does not exist");
-		
 		Recipe testRecipe = new Recipe();
 		testRecipe.setAuthor(newUser);
 		testRecipe.setName("recipe1");
@@ -110,62 +109,86 @@ public class FreshForkServiceTest {
 		
 		assertEquals(recipeID, deletedRecipe.getRecipeID());
 		assertNull(testService.deleteRecipe(0));
-	}
-	
-	@Test
-	public void testCreateUser() {
-		String generator = null;
-		generator = Integer.toString((int)(Math.random()*1000000000)) ;
-		String name = "Tom"+generator ;
-		String email = "tom"+generator+"@gmail.com";
+
+		testRecipe.setRecipeSteps("cooking... and done!");
+
 		
-		testService.createUser(name, email, "password", true);
-		
-		Iterable<Users> Users = usersRepository.findAll();
-		Iterator<Users> allUsers = Users.iterator();
+		Iterable<Recipe> Recipe = recipeRepository.findAll();
+		Iterator<Recipe> allRecipes = Recipe.iterator();
 		boolean exist = false;
-		while(allUsers.hasNext()) {
-			Users testuser = allUsers.next();
-			if(testuser.getName().matches(name)) {
-				if(testuser.getEmail().matches(email)) {
+
+		while (allRecipes.hasNext()) {
+			Recipe r = allRecipes.next();
+			if (r.getRecipeID() == testRecipe.getRecipeID()) {	
+				// Fatal error : duplicate id
+				exist = true;
+				assertFalse(exist);
+			}
+			if (r.getName().matches(testRecipe.getName())) {
+				if (r.getAuthor().getName().matches(testRecipe.getAuthor().getName())) {
 					exist = true;
 					break;
 				}
-					
 			}
 		}
-		
+
 		assertTrue(exist);
-				
-				
 	}
-	
+
+	@Test
+	public void testCreateUser() {
+		String generator = null;
+		generator = Integer.toString((int) (Math.random() * 1000000000));
+		String name = "Tom" + generator;
+		String email = "tom" + generator + "@gmail.com";
+		String password = "password";
+
+		testService.createUser(name, email, password, true);
+
+		Iterable<Users> Users = usersRepository.findAll();
+		Iterator<Users> allUsers = Users.iterator();
+		boolean exist = false;
+		while (allUsers.hasNext()) {
+			Users testuser = allUsers.next();
+			if (testuser.getName().matches(name)) {
+				if (testuser.getEmail().matches(email)) {
+					if (testuser.getPassword().matches(password)) {
+						exist = true;
+						break;
+					}
+				}
+			}
+		}
+
+		assertTrue(exist);
+
+	}
+
 	@Test
 	public void testLogin() {
 		Users testUser = createRandomTom();
-		
-		boolean authenticated = testService.authenticateUsers(testUser.getEmail(), testUser.getPassword());		
+
+		boolean authenticated = testService.authenticateUsers(testUser.getEmail(), testUser.getPassword());
 		boolean notauthenticated1 = testService.authenticateUsers(testUser.getEmail(), "somethignrandom");
 		String error = null;
 		try {
 			testService.authenticateUsers("somethignrandom", testUser.getPassword());
-		}catch(IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			error = e.getMessage();
 		}
-		
+
 		assertTrue(authenticated);
 		assertFalse(notauthenticated1);
-		assertEquals("Account with given email does not exist.",error);
-		
+		assertEquals("Account with given email does not exist.", error);
+
 	}
-	
-	
-	//creates a user with unique name and email
+
+	// creates a user with unique name and email
 	public Users createRandomTom() {
 		String generator = null;
-		generator = Integer.toString((int)(Math.random()*1000000000)) ;
-		String name = "Tom"+generator ;
-		String email = "tom"+generator+"@gmail.com";
+		generator = Integer.toString((int) (Math.random() * 1000000000));
+		String name = "Tom" + generator;
+		String email = "tom" + generator + "@gmail.com";
 		Users user = testService.createUser(name, email, "password", true);
 		return user;
 	}

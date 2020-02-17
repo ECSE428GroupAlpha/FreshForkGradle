@@ -1,18 +1,18 @@
 Feature: Add a User
 
-AS a person with an email
+As a person with an email
 I would like to become a user of FreshFork
 So that I can use the Freshwork application
 
 Scenario outline: Different types of users (Normal Flow)
 
- Given email <email>
-  And first name <fname>
-  And last name <lname>
-  And username <uname>
-  And password <pword>
-  And account type <acc_type>
- When email <email> requests to create a new account
+ Given I have email <email>
+  And I have first name <fname>
+  And I have last name <lname>
+  And I have username <uname>
+  And I have password <pword>
+  And I have account type <acc_type>
+ When I have email <email> requests to create a new account
  Then a new user is created with user id <user_id>
 
 
