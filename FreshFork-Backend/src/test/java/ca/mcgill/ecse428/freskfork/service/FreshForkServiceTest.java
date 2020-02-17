@@ -1,6 +1,7 @@
 package ca.mcgill.ecse428.freskfork.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.sql.Date;
@@ -8,6 +9,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.After;
@@ -62,6 +64,34 @@ public class FreshForkServiceTest {
 		assertEquals(testRecipe.getName(), newRecipe.getName());
 		assertEquals(testRecipe.getRating(), newRecipe.getRating());
 		assertEquals(testRecipe.getRecipeSteps(), newRecipe.getRecipeSteps());
+	}
+	
+	@Test
+	public void testCreateUser() {
+		String generator = null;
+		generator = Integer.toString((int)(Math.random()*1000000000)) ;
+		String name = "Tom"+generator ;
+		String email = "tom"+generator+"@gmail.com";
+		
+		testService.createUser(name, email, "password", true);
+		
+		Iterable<Users> Users = usersRepository.findAll();
+		Iterator<Users> allUsers = Users.iterator();
+		boolean exist = false;
+		while(allUsers.hasNext()) {
+			Users testuser = allUsers.next();
+			if(testuser.getName().matches(name)) {
+				if(testuser.getEmail().matches(email)) {
+					exist = true;
+					break;
+				}
+					
+			}
+		}
+		
+		assertTrue(exist);
+				
+				
 	}
 	
 

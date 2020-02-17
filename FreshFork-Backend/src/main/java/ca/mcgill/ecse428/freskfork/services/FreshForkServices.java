@@ -46,6 +46,13 @@ public class FreshForkServices {
 		
 		return usersRepository.save(Users);
 	}
+	
+	@Transactional
+	public Iterable<Users> getAllUsers() {
+		Iterable<Users> allUsers = usersRepository.findAll();
+		
+		return allUsers;
+	}
 
 	// RECIPE METHODS
 
