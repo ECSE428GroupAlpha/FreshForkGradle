@@ -1,10 +1,10 @@
-package ca.mcgill.ecse428.freskfork.dao;
+package ca.mcgill.ecse428.freshfork.dao;
 
 import java.util.*;
 
 import org.springframework.data.repository.CrudRepository;
 
-import ca.mcgill.ecse428.freskfork.model.Recipe;
+import ca.mcgill.ecse428.freshfork.model.Recipe;
 
 public interface RecipeRepository extends CrudRepository<Recipe, String> {
     Recipe findByRecipeID(int id);

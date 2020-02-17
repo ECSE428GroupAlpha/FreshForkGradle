@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.freskfork;
+package ca.mcgill.ecse428.freshfork;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

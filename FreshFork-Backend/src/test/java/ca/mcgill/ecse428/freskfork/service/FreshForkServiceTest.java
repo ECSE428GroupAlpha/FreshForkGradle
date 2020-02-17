@@ -22,10 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ca.mcgill.ecse428.freskfork.dao.*;
-import ca.mcgill.ecse428.freskfork.model.*;
-import ca.mcgill.ecse428.freskfork.services.*;
-import ca.mcgill.ecse428.freskfork.dto.*;
+import ca.mcgill.ecse428.freshfork.dao.*;
+import ca.mcgill.ecse428.freshfork.model.*;
+import ca.mcgill.ecse428.freshfork.services.*;
+import ca.mcgill.ecse428.freshfork.dto.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()

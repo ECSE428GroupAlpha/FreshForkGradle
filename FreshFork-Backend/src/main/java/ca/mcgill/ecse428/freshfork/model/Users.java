@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.freskfork.model;
+package ca.mcgill.ecse428.freshfork.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

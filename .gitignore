@@ -1,3 +1,5 @@
 .gradle/
 .lock
 .class
+FreshFork-Backend/bin/main/ca/mcgill/ecse428/freskfork/controller/UserRestController.class
+*.class

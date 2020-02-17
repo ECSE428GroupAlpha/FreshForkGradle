@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.freskfork.controller;
+package ca.mcgill.ecse428.freshfork.controller;
 
 
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse428.freskfork.dao.*;
-import ca.mcgill.ecse428.freskfork.dto.*;
-import ca.mcgill.ecse428.freskfork.model.*;
-import ca.mcgill.ecse428.freskfork.services.FreshForkServices;
+import ca.mcgill.ecse428.freshfork.dao.*;
+import ca.mcgill.ecse428.freshfork.dto.*;
+import ca.mcgill.ecse428.freshfork.model.*;
+import ca.mcgill.ecse428.freshfork.services.FreshForkServices;
 
 @RestController
 public class UserRestController {
