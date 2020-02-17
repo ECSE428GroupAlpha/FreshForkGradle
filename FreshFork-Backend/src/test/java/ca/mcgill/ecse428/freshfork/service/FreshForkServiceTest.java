@@ -2,6 +2,7 @@ package ca.mcgill.ecse428.freshfork.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -30,6 +31,18 @@ import ca.mcgill.ecse428.freshfork.dto.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest()
 public class FreshForkServiceTest {
+	private static final String user1 = "Anthony";
+	private static final String user1Password = "abcabc123";
+	private static final String user1Email = "antant123@gmail.com";
+	
+	private static final String user2 = "Julien";
+	private static final String user2Password = "absabs124";
+	private static final String user2Email = "juju123@gmail.com";
+	
+	private static final String user3 = "Camille";
+	private static final String user3Password = "camcam123";
+	private static final String user3Email = "camcam123@gmail.com";
+	
 	@Autowired
 	FreshForkServices testService;
 	
@@ -50,8 +63,10 @@ public class FreshForkServiceTest {
 
 	@Test
 	public void testCreateRecipe() {
-		Users newUser;
-		newUser = testService.createUser("Anthony", "abc@gmail.com", "antant123", true);
+		Users newUser = testService.createUser(user1, user1Email, user1Password, true);
+		Users nonProUser = testService.createUser(user2, user2Email, user2Password, false);
+		IllegalArgumentException e1 = new IllegalArgumentException("User is not a professional");
+		IllegalArgumentException e2 = new IllegalArgumentException("User does not exist");
 		
 		Recipe testRecipe = new Recipe();
 		testRecipe.setAuthor(newUser);
@@ -61,10 +76,40 @@ public class FreshForkServiceTest {
 		
 		Recipe newRecipe = testService.createRecipe(newUser.getUId(), "recipe1", "nice", "5");
 		
-		//assertEquals(testRecipe.getAuthor(), newRecipe.getAuthor());
+		//Test the created recipe
+		assertEquals(testRecipe.getAuthor().getUId(), newRecipe.getAuthor().getUId());
 		assertEquals(testRecipe.getName(), newRecipe.getName());
 		assertEquals(testRecipe.getRating(), newRecipe.getRating());
 		assertEquals(testRecipe.getRecipeSteps(), newRecipe.getRecipeSteps());
+		
+		//Try to create a recipe with non pro users
+		try {
+			testService.createRecipe(nonProUser.getUId(), "recipe2", "test", "10");
+
+		}
+		catch(IllegalArgumentException e) {
+			assertEquals(e.getMessage(), e1.getMessage());
+		}
+		
+		//Try to create with fake user
+		try {
+			testService.createRecipe(99999, "recipe2", "test", "10");
+		}
+		catch(IllegalArgumentException e) {
+			assertEquals(e.getMessage(), e2.getMessage());
+		}
+	}
+	
+	@Test
+	public void testDeleteRecipe() {
+		Users newUser = testService.createUser(user3, user3Email, user3Password, true);
+		Recipe testRecipe = testService.createRecipe(newUser.getUId(), "recipe1", "yummy", "5");
+		int recipeID = testRecipe.getRecipeID();
+		
+		Recipe deletedRecipe = testService.deleteRecipe(testRecipe.getRecipeID());
+		
+		assertEquals(recipeID, deletedRecipe.getRecipeID());
+		assertNull(testService.deleteRecipe(0));
 	}
 	
 	@Test
