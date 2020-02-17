@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.mcgill.ecse428.freskfork.dao.*;
 import ca.mcgill.ecse428.freskfork.dto.*;
 import ca.mcgill.ecse428.freskfork.model.*;
 import ca.mcgill.ecse428.freskfork.services.FreshForkServices;
@@ -21,6 +22,9 @@ public class UserRestController {
 	
 	@Autowired
 	FreshForkServices freshfork;
+	
+	@Autowired
+	UsersRepository usersRepository;
 	
 	//http://localhost:6212/users/create?name=ed&password=123456&email=adshasdh@aas&isPro=true
 	@PostMapping("/users/create")
@@ -38,11 +42,12 @@ public class UserRestController {
 	
 	//http://localhost:6212/users/createRecipe?authorID=1&author=edward&steps=adshasdh&rating=1
 	@PostMapping("/users/createRecipe")
-	public RecipeDto createRecipeController(@RequestParam(name = "authorID") int creatorID, @RequestParam(name = "author") String author, @RequestParam(name = "steps") String recipeSteps, @RequestParam(name = "rating") String rating) {
+	public RecipeDto createRecipeController(@RequestParam(name = "authorID") int creatorID, @RequestParam(name = "recipename") String recipename, @RequestParam(name = "steps") String recipeSteps, @RequestParam(name = "rating") String rating) {
 		//Try to create recipe, if we get an exception pass it up to front end
 		try {
-			Recipe tempRecipe = freshfork.createRecipe(creatorID, author, recipeSteps, rating);
-			RecipeDto returnRecipe = new RecipeDto(author, recipeSteps, rating, tempRecipe.getRecipeID());
+			Recipe tempRecipe = freshfork.createRecipe(creatorID, recipename, recipeSteps, rating);
+			Users user = usersRepository.findByUId(creatorID);
+			RecipeDto returnRecipe = new RecipeDto(recipename, user.getName(), recipeSteps, rating, tempRecipe.getRecipeID());
 			return returnRecipe;
 		}
 		catch(IllegalArgumentException e) {
@@ -103,7 +108,7 @@ public class UserRestController {
 		List<RecipeDto> recipeDtos = new ArrayList<RecipeDto>();
 		
 		for(Recipe r : recipes) {
-			RecipeDto temp = new RecipeDto(r.getName(), r.getRecipeSteps(), r.getRating(), r.getRecipeID());
+			RecipeDto temp = new RecipeDto(r.getName(), r.getAuthor().getName(), r.getRecipeSteps(), r.getRating(), r.getRecipeID());
 			recipeDtos.add(temp);
 		}
 		
@@ -120,7 +125,7 @@ public class UserRestController {
 		
 		while(iter.hasNext()) {
 			Recipe r = iter.next();
-			RecipeDto temp = new RecipeDto(r.getName(), r.getRecipeSteps(), r.getRating(), r.getRecipeID());
+			RecipeDto temp = new RecipeDto(r.getName(), r.getAuthor().getName(), r.getRecipeSteps(), r.getRating(), r.getRecipeID());
 			recipeDtos.add(temp);
 		}
 		
