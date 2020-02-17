@@ -4,6 +4,7 @@ package ca.mcgill.ecse428.freskfork.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,6 +70,20 @@ public class UserRestController {
 			Diet tempDiet = freshfork.createDiet(dietName);
 			DietDto returnDiet = new DietDto(tempDiet.getName());
 			return returnDiet;
+		}
+		catch(IllegalArgumentException e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
+	}
+
+	//http://localhost:6212/diet/all
+	@GetMapping("/diet/all")
+	public List<DietDto> getAllDiets(){
+		try {
+			return freshfork.getAllDiets()
+					.stream()
+					.map(diet -> new DietDto(diet.getName()))
+					.collect(Collectors.toList());
 		}
 		catch(IllegalArgumentException e) {
 			throw new IllegalArgumentException(e.getMessage());

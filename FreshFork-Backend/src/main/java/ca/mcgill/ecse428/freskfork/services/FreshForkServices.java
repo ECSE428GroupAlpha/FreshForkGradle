@@ -168,4 +168,9 @@ public class FreshForkServices {
 			}
 		}
 	}
+
+	@Transactional
+	public List<Diet> getAllDiets() {
+		return dietRepository.findAll();
+	}
 }
