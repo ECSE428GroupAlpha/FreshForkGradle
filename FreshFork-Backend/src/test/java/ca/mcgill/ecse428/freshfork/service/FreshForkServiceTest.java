@@ -165,9 +165,19 @@ public class FreshForkServiceTest {
 	@Test
 	public void testLogin() {
 		Users testUser = createRandomTom();
-
-		boolean authenticated = testService.authenticateUsers(testUser.getEmail(), testUser.getPassword());
-		boolean notauthenticated1 = testService.authenticateUsers(testUser.getEmail(), "somethignrandom");
+		String error2 = null;
+		try {
+			testService.authenticateUsers(testUser.getEmail(), testUser.getPassword());
+		}catch(IllegalArgumentException e) {
+			error2 = e.getMessage();
+		}
+		
+		String error1=null; 
+		try {
+			testService.authenticateUsers(testUser.getEmail(), "somethignrandom");
+		}catch(IllegalArgumentException e) {
+			error1 = e.getMessage();
+		}
 		String error = null;
 		try {
 			testService.authenticateUsers("somethignrandom", testUser.getPassword());
@@ -175,8 +185,8 @@ public class FreshForkServiceTest {
 			error = e.getMessage();
 		}
 
-		assertTrue(authenticated);
-		assertFalse(notauthenticated1);
+		assertNull(error2);
+		assertEquals("Incorrect password.", error1);
 		assertEquals("Account with given email does not exist.", error);
 
 	}
