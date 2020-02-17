@@ -77,6 +77,7 @@ public class FreshForkServices {
 		}
 	}
 	
+	@Transactional
 	public void addRecipeToDiet (String dietName, int recipeID) {
 		Recipe recipeToAddTo = recipeRepository.findByRecipeID(recipeID);
 		Diet dietToAdd = dietRepository.findByName(dietName);
@@ -89,8 +90,21 @@ public class FreshForkServices {
 		}
 		else {
 			Set<Diet> diets = recipeToAddTo.getDiet();
+			if(diets == null) {
+				diets = new HashSet<Diet>();
+			}
 			diets.add(dietToAdd);
 			recipeToAddTo.setDiet(diets);
+			
+			Set<Recipe> recipes = dietToAdd.getRecipe();
+			if(recipes == null) {
+				recipes = new HashSet<Recipe>();
+			}
+			recipes.add(recipeToAddTo);
+			dietToAdd.setRecipe(recipes);
+			
+			recipeRepository.save(recipeToAddTo);
+			dietRepository.save(dietToAdd);
 		}
 	}
 	
@@ -179,5 +193,15 @@ public class FreshForkServices {
 	@Transactional
 	public List<Diet> getAllDiets() {
 		return dietRepository.findAll();
+	}
+	
+	@Transactional
+	public Diet getDiet(String dietName) {
+		return dietRepository.findByName(dietName);
+	}
+	
+	@Transactional
+	public Recipe getRecipe(int recipeID) {
+		return recipeRepository.findByRecipeID(recipeID);
 	}
 }
