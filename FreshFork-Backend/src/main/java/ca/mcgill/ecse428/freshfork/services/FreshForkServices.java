@@ -213,4 +213,17 @@ public class FreshForkServices {
 	public Recipe getRecipe(int recipeID) {
 		return recipeRepository.findByRecipeID(recipeID);
 	}
+	
+	@Transactional
+	public void deleteUser(int userID) {
+		Users userToDelete = null;
+		//Try and find the user first, if you cant find the user throw an exception
+		userToDelete = usersRepository.findByUId(userID);
+		if(userToDelete == null) {
+			throw new IllegalArgumentException("User not found");
+		}
+		else {
+			usersRepository.delete(userToDelete);
+		}
+	}
 }
