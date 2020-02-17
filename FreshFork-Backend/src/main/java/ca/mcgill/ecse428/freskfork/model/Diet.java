@@ -1,6 +1,9 @@
 package ca.mcgill.ecse428.freskfork.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+
 import java.util.Set;
 import javax.persistence.ManyToMany;
 import javax.persistence.Id;
@@ -9,7 +12,7 @@ import javax.persistence.Id;
 public class Diet{
 private Set<Users> Users;
 
-@ManyToMany(mappedBy="diet")
+@ManyToMany(mappedBy="diet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 public Set<Users> getUsers() {
    return this.Users;
 }

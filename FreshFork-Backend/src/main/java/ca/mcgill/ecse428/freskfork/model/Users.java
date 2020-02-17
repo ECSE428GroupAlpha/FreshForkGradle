@@ -33,15 +33,15 @@ public void setCreattedRecipes(Set<Recipe> creattedRecipess) {
    this.creattedRecipes = creattedRecipess;
 }
 
-private Set<Recipe> favoriteREcipes;
+private Set<Recipe> favoriteRecipes;
 
 @ManyToMany
-public Set<Recipe> getFavoriteREcipes() {
-   return this.favoriteREcipes;
+public Set<Recipe> getFavoriteRecipes() {
+   return this.favoriteRecipes;
 }
 
-public void setFavoriteREcipes(Set<Recipe> favoriteREcipess) {
-   this.favoriteREcipes = favoriteREcipess;
+public void setFavoriteRecipes(Set<Recipe> favoriteRecipess) {
+   this.favoriteRecipes = favoriteRecipess;
 }
 
 private Set<Ingredient> allergy;

@@ -1,6 +1,8 @@
 package ca.mcgill.ecse428.freskfork.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
@@ -14,7 +16,7 @@ import javax.persistence.Id;
 public class Recipe{
 private Set<Diet> diet;
 
-@ManyToMany(mappedBy="recipe")
+@ManyToMany(mappedBy="recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 public Set<Diet> getDiet() {
    return this.diet;
 }
@@ -36,7 +38,7 @@ public void setAuthor(Users author) {
 
 private Set<Users> favoritedBy;
 
-@ManyToMany(mappedBy="favoriteREcipes")
+@ManyToMany(mappedBy="favoriteRecipes", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 public Set<Users> getFavoritedBy() {
    return this.favoritedBy;
 }
@@ -47,7 +49,7 @@ public void setFavoritedBy(Set<Users> favoritedBys) {
 
 private Set<IngredientUsage> ingredientUsage;
 
-@OneToMany(mappedBy="recipe")
+@OneToMany(mappedBy="recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 public Set<IngredientUsage> getIngredientUsage() {
    return this.ingredientUsage;
 }

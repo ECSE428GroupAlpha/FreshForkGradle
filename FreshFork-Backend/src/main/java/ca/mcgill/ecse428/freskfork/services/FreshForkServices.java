@@ -28,7 +28,7 @@ public class FreshForkServices {
 	UsersRepository usersRepository;
 
 
-	// Users METHODS
+	// USER METHODS
 
 	@Transactional
 	public Users createUser(String name, String email, String password, boolean isPro) {
@@ -68,10 +68,41 @@ public class FreshForkServices {
 			throw new IllegalArgumentException("User is not a professional");
 		}
 	}
+	
+	public void addRecipeToDiet (String dietName, int recipeID) {
+		Recipe recipeToAddTo = recipeRepository.findByRecipeID(recipeID);
+		Diet dietToAdd = dietRepository.findByName(dietName);
+		
+		if(dietToAdd == null) {
+			throw new IllegalArgumentException("Diet does not exist");
+		}
+		else if(recipeToAddTo == null) {
+			throw new IllegalArgumentException("Recipe with give ID does not exist");
+		}
+		else {
+			Set<Diet> diets = recipeToAddTo.getDiet();
+			diets.add(dietToAdd);
+			recipeToAddTo.setDiet(diets);
+		}
+	}
+	
+	//DIET METHODS
+	@Transactional
+	public Diet createDiet(String dietName) {
+		Diet diet = new Diet();
+		
+		if(dietRepository.findAllByName(dietName).size() == 1) {
+			throw new IllegalArgumentException("Diet with given name has already been created.");
+		}
+		else {
+			diet.setName(dietName);
+		}
+		
+		return dietRepository.save(diet);
+	}
 
 	@Transactional
-	public String deleteRecipe(int recipeID) {
-		String recipeName;
+	public Recipe deleteRecipe(int recipeID) {
 		
 		Recipe recipeToDelete = recipeRepository.findByRecipeID(recipeID);
 		if(recipeToDelete == null) {
@@ -80,17 +111,43 @@ public class FreshForkServices {
 		}
 		else {
 			//Store recipeName in new string before deleting recipe
-			recipeName = new String(recipeToDelete.getName());
 			recipeRepository.delete(recipeToDelete);
+			return recipeToDelete;
 		}
 		
-		return recipeName;
 	}
 
-	/*@Transactional
+	@Transactional
 	public List<Recipe> filterRecipeByDiet(String dietName) {
-		return recipeRepository.listByDiet(dietName);
-	}*/
+		List<Recipe> ret = new ArrayList<Recipe>();
+		Diet dietToFilterBy = dietRepository.findByName(dietName);
+		Iterable<Recipe> allRecipes = recipeRepository.findAll();
+		
+		if(dietToFilterBy == null) {
+			throw new IllegalArgumentException("Diet does not exist.");
+		}
+		
+		Iterator<Recipe> iter = allRecipes.iterator();
+		
+		while(iter.hasNext()) {
+			Recipe temp = iter.next();
+			Set<Diet> dietsOfTemp = temp.getDiet();
+			for(Diet d : dietsOfTemp) {
+				if(d.getName().equals(dietName)) {
+					ret.add(temp);
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	@Transactional
+	public Iterable<Recipe> getAllRecipes() {
+		Iterable<Recipe> allRecipes = recipeRepository.findAll();
+		
+		return allRecipes;
+	}
 
 	// AUTHENTICATION
 
