@@ -1,6 +1,7 @@
 package ca.mcgill.ecse428.freskfork.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -94,5 +95,34 @@ public class FreshForkServiceTest {
 				
 	}
 	
+	@Test
+	public void testLogin() {
+		Users testUser = createRandomTom();
+		
+		boolean authenticated = testService.authenticateUsers(testUser.getEmail(), testUser.getPassword());		
+		boolean notauthenticated1 = testService.authenticateUsers(testUser.getEmail(), "somethignrandom");
+		String error = null;
+		try {
+			testService.authenticateUsers("somethignrandom", testUser.getPassword());
+		}catch(IllegalArgumentException e) {
+			error = e.getMessage();
+		}
+		
+		assertTrue(authenticated);
+		assertFalse(notauthenticated1);
+		assertEquals("Account with given email does not exist.",error);
+		
+	}
+	
+	
+	//creates a user with unique name and email
+	public Users createRandomTom() {
+		String generator = null;
+		generator = Integer.toString((int)(Math.random()*1000000000)) ;
+		String name = "Tom"+generator ;
+		String email = "tom"+generator+"@gmail.com";
+		Users user = testService.createUser(name, email, "password", true);
+		return user;
+	}
 
 }
