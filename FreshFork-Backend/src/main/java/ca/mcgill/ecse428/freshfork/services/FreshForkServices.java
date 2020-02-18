@@ -77,7 +77,8 @@ public class FreshForkServices {
 		}
 	}
 	
-	public void addRecipeToDiet (String dietName, int recipeID) {
+	@Transactional
+	public Recipe addRecipeToDiet (String dietName, int recipeID) {
 		Recipe recipeToAddTo = recipeRepository.findByRecipeID(recipeID);
 		Diet dietToAdd = dietRepository.findByName(dietName);
 		
@@ -88,10 +89,34 @@ public class FreshForkServices {
 			throw new IllegalArgumentException("Recipe with give ID does not exist");
 		}
 		else {
+			System.out.println(dietToAdd.getName());
+			Iterable<Diet> ds = recipeToAddTo.getDiet();
+			for(Diet d : ds) {
+				System.out.println("old diets " + d.getName());
+				if(d.getName().equals(dietToAdd.getName())) {
+					throw new IllegalArgumentException("Recipe is already part of the diet");
+				}
+			}
+			
 			Set<Diet> diets = recipeToAddTo.getDiet();
+			if(diets == null) {
+				diets = new HashSet<Diet>();
+			}
 			diets.add(dietToAdd);
 			recipeToAddTo.setDiet(diets);
+			
+			Set<Recipe> recipes = dietToAdd.getRecipe();
+			if(recipes == null) {
+				recipes = new HashSet<Recipe>();
+			}
+			recipes.add(recipeToAddTo);
+			dietToAdd.setRecipe(recipes);
+			
+			recipeRepository.save(recipeToAddTo);
+			dietRepository.save(dietToAdd);
 		}
+		
+		return recipeToAddTo;
 	}
 	
 	//DIET METHODS
@@ -135,12 +160,10 @@ public class FreshForkServices {
 			throw new IllegalArgumentException("Diet does not exist.");
 		}
 		
-		Iterator<Recipe> iter = allRecipes.iterator();
-		
-		while(iter.hasNext()) {
-			Recipe temp = iter.next();
+		for(Recipe temp : allRecipes) {
 			Set<Diet> dietsOfTemp = temp.getDiet();
 			for(Diet d : dietsOfTemp) {
+				System.out.println(d.getName());
 				if(d.getName().equals(dietName)) {
 					ret.add(temp);
 				}
@@ -160,7 +183,7 @@ public class FreshForkServices {
 	// AUTHENTICATION
 
 	@Transactional
-	public boolean authenticateUsers(String email, String password) {
+	public void authenticateUsers(String email, String password) {
 		Users Users = usersRepository.findByEmail(email);
 		
 		if(Users == null) {
@@ -168,10 +191,10 @@ public class FreshForkServices {
 		}
 		else {
 			if(password.equals(Users.getPassword())) {
-				return true;
+				return;
 			}
 			else {
-				return false;
+				throw new IllegalArgumentException("Incorrect password.");
 			}
 		}
 	}
@@ -179,5 +202,28 @@ public class FreshForkServices {
 	@Transactional
 	public List<Diet> getAllDiets() {
 		return dietRepository.findAll();
+	}
+	
+	@Transactional
+	public Diet getDiet(String dietName) {
+		return dietRepository.findByName(dietName);
+	}
+	
+	@Transactional
+	public Recipe getRecipe(int recipeID) {
+		return recipeRepository.findByRecipeID(recipeID);
+	}
+	
+	@Transactional
+	public void deleteUser(int userID) {
+		Users userToDelete = null;
+		//Try and find the user first, if you cant find the user throw an exception
+		userToDelete = usersRepository.findByUId(userID);
+		if(userToDelete == null) {
+			throw new IllegalArgumentException("User not found");
+		}
+		else {
+			usersRepository.delete(userToDelete);
+		}
 	}
 }

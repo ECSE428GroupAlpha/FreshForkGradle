@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class Recipe{
 private Set<Diet> diet;
 
-@ManyToMany(mappedBy="recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+@ManyToMany(mappedBy="recipe", fetch = FetchType.EAGER)
 public Set<Diet> getDiet() {
    return this.diet;
 }
@@ -38,7 +38,7 @@ public void setAuthor(Users author) {
 
 private Set<Users> favoritedBy;
 
-@ManyToMany(mappedBy="favoriteRecipes", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+@ManyToMany(mappedBy="favoriteRecipes")
 public Set<Users> getFavoritedBy() {
    return this.favoritedBy;
 }
@@ -49,7 +49,7 @@ public void setFavoritedBy(Set<Users> favoritedBys) {
 
 private Set<IngredientUsage> ingredientUsage;
 
-@OneToMany(mappedBy="recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+@OneToMany(mappedBy="recipe")
 public Set<IngredientUsage> getIngredientUsage() {
    return this.ingredientUsage;
 }

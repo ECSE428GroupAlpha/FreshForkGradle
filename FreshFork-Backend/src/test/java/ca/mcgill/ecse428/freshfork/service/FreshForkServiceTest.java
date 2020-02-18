@@ -2,6 +2,7 @@ package ca.mcgill.ecse428.freshfork.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -10,9 +11,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.junit.After;
 import org.junit.Test;
@@ -166,9 +165,19 @@ public class FreshForkServiceTest {
 	@Test
 	public void testLogin() {
 		Users testUser = createRandomTom();
-
-		boolean authenticated = testService.authenticateUsers(testUser.getEmail(), testUser.getPassword());
-		boolean notauthenticated1 = testService.authenticateUsers(testUser.getEmail(), "somethignrandom");
+		String error2 = null;
+		try {
+			testService.authenticateUsers(testUser.getEmail(), testUser.getPassword());
+		}catch(IllegalArgumentException e) {
+			error2 = e.getMessage();
+		}
+		
+		String error1=null; 
+		try {
+			testService.authenticateUsers(testUser.getEmail(), "somethignrandom");
+		}catch(IllegalArgumentException e) {
+			error1 = e.getMessage();
+		}
 		String error = null;
 		try {
 			testService.authenticateUsers("somethignrandom", testUser.getPassword());
@@ -176,10 +185,61 @@ public class FreshForkServiceTest {
 			error = e.getMessage();
 		}
 
-		assertTrue(authenticated);
-		assertFalse(notauthenticated1);
+		assertNull(error2);
+		assertEquals("Incorrect password.", error1);
 		assertEquals("Account with given email does not exist.", error);
 
+	}
+	
+	@Test
+	public void testAddRecipeToDiet() {
+		Diet tempDiet = null;
+		Recipe tempRecipe = null;
+		Users newProUser = testService.createUser(user3+"h", user3Email+"h", user3Password, true);
+		Recipe newRecipe = testService.createRecipe(newProUser.getUId(), "recipe1", "nice", "5");
+		Diet newDiet = testService.createDiet("Diet1");
+	
+		assertNull(newRecipe.getDiet());
+		assertNull(newDiet.getRecipe());
+		
+		testService.addRecipeToDiet(newDiet.getName(), newRecipe.getRecipeID());
+		
+		newRecipe = testService.getRecipe(newRecipe.getRecipeID());
+		newDiet = testService.getDiet(newDiet.getName());
+		
+		assertNotNull(newRecipe);
+		assertNotNull(newDiet);
+		
+		Set<Diet> recipeDiets= newRecipe.getDiet();
+		Iterator<Diet> dietIterator = recipeDiets.iterator();
+		while(dietIterator.hasNext()) {
+			tempDiet = dietIterator.next();
+			if(tempDiet.getName().equals(newDiet.getName())) {
+				break;
+			}
+		}
+		if(tempDiet != null) {
+			assertEquals(tempDiet.getName(), newDiet.getName());
+		}
+		else {
+			assertTrue(false);
+		}
+		
+		Set<Recipe> recipesInDiet = newDiet.getRecipe();
+		Iterator<Recipe> recipeIterator = recipesInDiet.iterator();
+		while(recipeIterator.hasNext()) {
+			tempRecipe = recipeIterator.next();
+			if(tempRecipe.getRecipeID() == newRecipe.getRecipeID()) {
+				break;
+			}
+		}
+		if(tempRecipe != null) {
+			assertEquals(tempRecipe.getRecipeID(), newRecipe.getRecipeID());
+		}
+		else {
+			assertTrue(false);
+		}
+	
 	}
 
 	// creates a user with unique name and email
