@@ -63,7 +63,9 @@ public class FreshForkServices {
 		if(user == null) {
 			throw new IllegalArgumentException("User does not exist");
 		}
-
+		if(Integer.parseInt(rating) < 0 ) {
+			throw new IllegalArgumentException("Invalid input for rating");
+		}
 		//Checks if user is pro first, otherwise return null
 		if(user.isIsPro()) {
 			recipe.setName(recipeName);
