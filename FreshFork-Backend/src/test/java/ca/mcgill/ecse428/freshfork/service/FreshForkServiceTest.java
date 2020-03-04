@@ -104,10 +104,10 @@ public class FreshForkServiceTest {
 		Recipe testRecipe = testService.createRecipe(newUser.getUId(), "recipe1", "yummy", "5");
 		int recipeID = testRecipe.getRecipeID();
 		
-		Recipe deletedRecipe = testService.deleteRecipe(testRecipe.getRecipeID());
+		Boolean deletedRecipe = testService.deleteRecipe(testRecipe.getRecipeID(),newUser);
 		
-		assertEquals(recipeID, deletedRecipe.getRecipeID());
-		assertNull(testService.deleteRecipe(0));
+		assertTrue(deletedRecipe);
+		assertNull(testService.deleteRecipe(0,newUser));
 
 		testRecipe.setRecipeSteps("cooking... and done!");
 

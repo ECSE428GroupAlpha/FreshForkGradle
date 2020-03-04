@@ -6,7 +6,7 @@ Feature: Add a User
 
   Scenario Outline: Different types of users (Normal Flow)
 
-    Given email <email>2
+    Given email <email>
     And first name <fname>
     And last name <lname>
     And username <uname>

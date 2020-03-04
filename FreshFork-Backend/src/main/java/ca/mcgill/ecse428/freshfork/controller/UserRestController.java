@@ -56,10 +56,11 @@ public class UserRestController {
 	}
 	
 	@PostMapping("/users/deleteRecipe")
-	public int deleteRecipeController(@RequestParam(name = "recipeID") int recipeID) {
+	public int deleteRecipeController(@RequestParam(name = "authorID") int creatorID, @RequestParam(name = "recipeID") int recipeID) {
 		//deleteRecipe returns a string, if string is null or empty we did not delete the recipe
-		Recipe tempRecipe = freshfork.deleteRecipe(recipeID);
-		if(tempRecipe == null) {
+		Users user = usersRepository.findByUId(creatorID);
+		Boolean done = freshfork.deleteRecipe(recipeID,user);
+		if(done) {
 			return 1;
 		}
 		else {

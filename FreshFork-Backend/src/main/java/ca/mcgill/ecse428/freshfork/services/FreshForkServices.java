@@ -137,17 +137,26 @@ public class FreshForkServices {
 	}
 
 	@Transactional
-	public Recipe deleteRecipe(int recipeID) {
-		
-		Recipe recipeToDelete = recipeRepository.findByRecipeID(recipeID);
-		if(recipeToDelete == null) {
-			//Recipe could not be found, returning null
-			return null;
+	public Boolean deleteRecipe(int recipeID,Users user) {
+		Recipe recipeToDelete;
+		if(!user.isIsPro()) {
+			throw new IllegalArgumentException("User not pro");
 		}
+		try {
+			recipeToDelete = recipeRepository.findByRecipeID(recipeID);
+		}
+		catch(Exception e) {
+				throw new IllegalArgumentException("Recipe not found");
+		}
+
+		if(recipeToDelete.getAuthor().getUId() != user.getUId()) {
+			throw new IllegalArgumentException("User is not creator");
+		}
+		
 		else {
 			//Store recipeName in new string before deleting recipe
 			recipeRepository.delete(recipeToDelete);
-			return recipeToDelete;
+			return true;
 		}
 		
 	}

@@ -14,7 +14,7 @@ Feature: Create_Recipe
             | 131423424 | Apple Sauce | Stir the ingredients | 5      |
 
 
-    Scenario Outline: : Professional attempts to create a recipe with invalid values (error flow)
+    Scenario Outline:  Professional attempts to create a recipe with invalid values (error flow)
         Given I am an existing user of type Professional
         When I provide a <recipe_name>, <recipe_instructions>, <rating>
         Then an "Invalid input for rating" message is issued
