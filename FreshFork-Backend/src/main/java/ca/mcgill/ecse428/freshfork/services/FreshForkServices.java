@@ -48,6 +48,22 @@ public class FreshForkServices {
 	}
 	
 	@Transactional
+	public Boolean changePassword(String email, String existingpassword, String newpassword) {
+		Users user = usersRepository.findByEmail(email);
+		if(user == null) {
+			throw new IllegalArgumentException("incorrect email");
+		}
+		if(user.getPassword().matches(existingpassword)) {
+			user.setPassword(newpassword);
+			return true;
+		}
+		else {
+			throw new IllegalArgumentException("incorrect current password");
+		}
+
+	}
+	
+	@Transactional
 	public Iterable<Users> getAllUsers() {
 		Iterable<Users> allUsers = usersRepository.findAll();
 		
