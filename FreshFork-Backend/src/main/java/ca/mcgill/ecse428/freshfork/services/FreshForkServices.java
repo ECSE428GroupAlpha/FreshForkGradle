@@ -210,7 +210,7 @@ public class FreshForkServices {
 	// AUTHENTICATION
 
 	@Transactional
-	public void authenticateUsers(String email, String password) {
+	public Boolean authenticateUsers(String email, String password) {
 		Users Users = usersRepository.findByEmail(email);
 		
 		if(Users == null) {
@@ -218,7 +218,7 @@ public class FreshForkServices {
 		}
 		else {
 			if(password.equals(Users.getPassword())) {
-				return;
+				return true;
 			}
 			else {
 				throw new IllegalArgumentException("Incorrect password.");
