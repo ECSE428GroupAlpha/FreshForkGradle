@@ -197,7 +197,7 @@ public class FreshForkServiceTest {
 		Recipe tempRecipe = null;
 		Users newProUser = testService.createUser(user3+"h", user3Email+"h", user3Password, true);
 		Recipe newRecipe = testService.createRecipe(newProUser.getUId(), "recipe1", "nice", "5");
-		Diet newDiet = testService.createDiet("Diet1");
+		Diet newDiet = testService.createDiet("Diet1",newProUser.getEmail());
 	
 		assertNull(newRecipe.getDiet());
 		assertNull(newDiet.getRecipe());

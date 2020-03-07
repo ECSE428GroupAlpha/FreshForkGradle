@@ -139,7 +139,10 @@ public class FreshForkServices {
 	
 	//DIET METHODS
 	@Transactional
-	public Diet createDiet(String dietName) {
+	public Diet createDiet(String dietName, String email) {
+		if(!usersRepository.findByEmail(email).isIsPro()) {
+			throw new IllegalArgumentException("User is not professional");
+		}
 		Diet diet = new Diet();
 		
 		if(dietRepository.findAllByName(dietName).size() == 1) {
