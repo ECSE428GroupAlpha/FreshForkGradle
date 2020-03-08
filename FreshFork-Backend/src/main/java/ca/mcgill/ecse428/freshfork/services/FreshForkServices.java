@@ -182,6 +182,7 @@ public class FreshForkServices {
 	
 	public Boolean removeDiet(String dietName, String email) {
 		Users user = null;
+		Diet diet=null;
 		try {
 			user = usersRepository.findByEmail(email);
 		}
@@ -194,7 +195,18 @@ public class FreshForkServices {
 		if(!user.isIsPro()) {
 			throw new IllegalArgumentException("User not Pro");
 		}
+		diet = dietRepository.findByName(dietName);
 		
+		if(diet==null) {
+			throw new IllegalArgumentException("diet does not exist");
+		}
+		
+		try{
+			dietRepository.delete(diet);
+		}
+		catch(Exception e) {
+			throw new IllegalArgumentException(e.getCause());
+		}
 		return true;
 	}
 
