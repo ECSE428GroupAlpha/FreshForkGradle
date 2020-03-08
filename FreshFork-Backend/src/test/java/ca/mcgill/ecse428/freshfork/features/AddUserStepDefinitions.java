@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -20,6 +21,11 @@ public class AddUserStepDefinitions {
     String username;
     String password;
     private boolean isPro;
+    String name;
+    String password1;
+    String email1;
+    boolean isPro1;
+    Users user;
 
     String dwightSchruteErrorMsg;
 
@@ -29,43 +35,23 @@ public class AddUserStepDefinitions {
     @Autowired
     UsersRepository usersRepository;
 
-    @Given("^email (.*)2$")
-    public void email_email(String email) {
-        System.out.println(email);
-        this.email = email;
+    @Given("the user submits the name,email, password and pro atrribute")
+    public void the_user_submits_the_name_email_password_and_pro_atrribute() {
+        name = "tom";
+        password1 = "password";
+        isPro1 = true;
+        email1 = "tom@gmail.com";
     }
 
-    @Given("^first name (.*)$")
-    public void first_name_fname(String fname) {
+    @When("user request to create a new account on the system")
+    public void user_request_to_create_a_new_account_on_the_system() {
+        user = freshForkServices.createUser(name, email1, password1, isPro1);
     }
-    @Given("^last name (.*)$")
-    public void last_name_lname(String lname) {
-    }
-    @Given("^username (.*)$")
-    public void username_uname(String username) {
-        // Write code here that turns the phrase above into concrete actions
-        this.username = username;
-    }
-    @Given("^password (.*)$")
-    public void password_pword(String password) {
-        this.password = password;
+    @Then("the system will create a new account")
+    public void the_system_will_create_a_new_account() {
+        assertNotNull(user);
     }
 
-    @Given("^account type (.*)$")
-    public void account_type_acc_type(String accType) {
-        this.isPro = accType.equals("Professional");
-    }
-
-    @When("^email (.*) requests to create a new account$")
-    public void email_email_requests_to_create_a_new_account(String email) {
-        freshForkServices.createUser(username, email, password, isPro);
-    }
-
-    @Then("a new user is created")
-    public void a_new_user_is_created_with_user_id_user_id() {
-        Users users = usersRepository.findByName(username);
-        assertEquals(usersRepository.findByName(username).getName(), this.username);
-    }
 
     @Given("dwight@schrute.com is a registered email of an existing user of FreshFork")
     public void dwight_schrute_com_is_a_registered_email_of_an_existing_user_of_FreshFork() {
