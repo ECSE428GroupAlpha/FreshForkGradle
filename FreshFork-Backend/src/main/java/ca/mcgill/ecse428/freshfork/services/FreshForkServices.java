@@ -137,24 +137,6 @@ public class FreshForkServices {
 		return recipeToAddTo;
 	}
 	
-	//DIET METHODS
-	@Transactional
-	public Diet createDiet(String dietName, String email) {
-		if(!usersRepository.findByEmail(email).isIsPro()) {
-			throw new IllegalArgumentException("User is not professional");
-		}
-		Diet diet = new Diet();
-		
-		if(dietRepository.findAllByName(dietName).size() == 1) {
-			throw new IllegalArgumentException("Diet with given name has already been created.");
-		}
-		else {
-			diet.setName(dietName);
-		}
-		
-		return dietRepository.save(diet);
-	}
-
 	@Transactional
 	public Boolean deleteRecipe(int recipeID,Users user) {
 		Recipe recipeToDelete;
@@ -178,6 +160,42 @@ public class FreshForkServices {
 			return true;
 		}
 		
+	}
+	
+	//DIET METHODS
+	@Transactional
+	public Diet createDiet(String dietName, String email) {
+		if(!usersRepository.findByEmail(email).isIsPro()) {
+			throw new IllegalArgumentException("User is not professional");
+		}
+		Diet diet = new Diet();
+		
+		if(dietRepository.findAllByName(dietName).size() == 1) {
+			throw new IllegalArgumentException("Diet with given name has already been created.");
+		}
+		else {
+			diet.setName(dietName);
+		}
+		
+		return dietRepository.save(diet);
+	}
+	
+	public Boolean removeDiet(String dietName, String email) {
+		Users user = null;
+		try {
+			user = usersRepository.findByEmail(email);
+		}
+		catch(Exception e) {
+			throw new IllegalArgumentException(e.getCause());
+		}
+		if(user==null) {
+			throw new IllegalArgumentException("Email not found");
+		}
+		if(!user.isIsPro()) {
+			throw new IllegalArgumentException("User not Pro");
+		}
+		
+		return true;
 	}
 
 	@Transactional
