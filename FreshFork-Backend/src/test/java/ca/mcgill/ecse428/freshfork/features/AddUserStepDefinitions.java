@@ -26,6 +26,8 @@ public class AddUserStepDefinitions {
     String email1;
     boolean isPro1;
     Users user;
+    String rand = Integer.toString((int)(Math.random()*100000000));
+
 
     String dwightSchruteErrorMsg;
 
@@ -37,10 +39,10 @@ public class AddUserStepDefinitions {
 
     @Given("the user submits the name,email, password and pro atrribute")
     public void the_user_submits_the_name_email_password_and_pro_atrribute() {
-        name = "tom";
+        name = "addusertest"+rand;
         password1 = "password";
         isPro1 = true;
-        email1 = "tom@gmail.com";
+        email1 = "addusertest"+rand+"@gmail.com";
     }
 
     @When("user request to create a new account on the system")
@@ -55,7 +57,7 @@ public class AddUserStepDefinitions {
 
     @Given("dwight@schrute.com is a registered email of an existing user of FreshFork")
     public void dwight_schrute_com_is_a_registered_email_of_an_existing_user_of_FreshFork() {
-        freshForkServices.createUser("dwight_schrute", "dwight@schrute.com", password, isPro);
+        freshForkServices.createUser("dwight_schrute"+rand, "dwight"+rand+"@schrute.com", password, isPro);
     }
 
     @When("dwight@schrute.com requests to create a new account")

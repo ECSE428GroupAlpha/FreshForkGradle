@@ -236,15 +236,23 @@ public class FreshForkServices {
 	
 	
 	@Transactional
-	public Iterable<Recipe> getAllRecipes() {
+	public Iterable<Recipe> getAllRecipes(String email) {
+		Users user = usersRepository.findByEmail(email);
+		if(user==null) {
+			throw new IllegalArgumentException("User not found");
+		}
 		Iterable<Recipe> allRecipes = recipeRepository.findAll();
 		
 		return allRecipes;
 	}
 	
 	@Transactional 
-	public List<Recipe> searchRecipe(String searchString) {
-		Iterable<Recipe> recipes = getAllRecipes();
+	public List<Recipe> searchRecipe(String searchString,String email) {
+		Users user = usersRepository.findByEmail(email);
+		if(user==null) {
+			throw new IllegalArgumentException("User not found");
+		}
+		Iterable<Recipe> recipes = getAllRecipes(email);
 		List<Recipe> rs = new ArrayList<Recipe>();
 		
 		Iterator<Recipe> iter = recipes.iterator();
@@ -279,7 +287,12 @@ public class FreshForkServices {
 	}
 
 	@Transactional
-	public List<Diet> getAllDiets() {
+	public List<Diet> getAllDiets(String email) {
+Users Users = usersRepository.findByEmail(email);
+		
+		if(Users == null) {
+			throw new IllegalArgumentException("Account with given email does not exist.");
+		}
 		return dietRepository.findAll();
 	}
 	

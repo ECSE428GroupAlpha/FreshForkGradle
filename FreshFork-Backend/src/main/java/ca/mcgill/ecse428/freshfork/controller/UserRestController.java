@@ -101,9 +101,9 @@ public class UserRestController {
 
 	//http://localhost:6212/diet/all
 	@GetMapping("/diet/all")
-	public List<DietDto> getAllDiets(){
+	public List<DietDto> getAllDiets(@RequestParam(name = "e") String email){
 		try {
-			return freshfork.getAllDiets()
+			return freshfork.getAllDiets(email)
 					.stream()
 					.map(diet -> new DietDto(diet.getName()))
 					.collect(Collectors.toList());
@@ -135,8 +135,8 @@ public class UserRestController {
 	
 	//http://localhost:6212/recipe/list
 	@GetMapping("/recipe/list")
-	public List<RecipeDto> listAllRecipesController() {
-		Iterable<Recipe> recipes = freshfork.getAllRecipes();
+	public List<RecipeDto> listAllRecipesController(@RequestParam(name = "e") String email) {
+		Iterable<Recipe> recipes = freshfork.getAllRecipes(email);
 		List<RecipeDto> recipeDtos = new ArrayList<RecipeDto>();
 		
 		Iterator<Recipe> iter = recipes.iterator();
@@ -151,8 +151,8 @@ public class UserRestController {
 	}
 	
 	@GetMapping("/recipe/search")
-	public List<RecipeDto> searchRecipesController(@RequestParam(name = "q") String searchString) {
-		List<Recipe> recipes = freshfork.searchRecipe(searchString);
+	public List<RecipeDto> searchRecipesController(@RequestParam(name = "q") String searchString,@RequestParam(name = "e") String email) {
+		List<Recipe> recipes = freshfork.searchRecipe(searchString,email);
 		List<RecipeDto> recipeDtos = new ArrayList<RecipeDto>();
 		
 		for(Recipe r : recipes) {
