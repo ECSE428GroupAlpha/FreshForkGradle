@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse428.freshfork.dao.*;
+import ca.mcgill.ecse428.freshfork.dto.RecipeDto;
 import ca.mcgill.ecse428.freshfork.model.*;
 
 import java.util.*;
@@ -159,11 +160,29 @@ public class FreshForkServices {
 		return ret;
 	}
 	
+	
 	@Transactional
 	public Iterable<Recipe> getAllRecipes() {
 		Iterable<Recipe> allRecipes = recipeRepository.findAll();
 		
 		return allRecipes;
+	}
+	
+	@Transactional 
+	public List<Recipe> searchRecipe(String searchString) {
+		Iterable<Recipe> recipes = getAllRecipes();
+		List<Recipe> rs = new ArrayList<Recipe>();
+		
+		Iterator<Recipe> iter = recipes.iterator();
+		
+		while(iter.hasNext()) {
+			Recipe r = iter.next();
+			if(r.getName().indexOf(searchString) != -1) {
+				rs.add(r);
+			}
+		}
+		
+		return rs;
 	}
 
 	// AUTHENTICATION

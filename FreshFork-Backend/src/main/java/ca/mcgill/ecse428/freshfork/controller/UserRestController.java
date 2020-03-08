@@ -26,6 +26,23 @@ public class UserRestController {
 	@Autowired
 	UsersRepository usersRepository;
 	
+	//http://localhost:6212/users/list
+	@GetMapping("/users/list")
+	public List<UserDto> listAllUsersController() {
+		Iterable<Users> users = freshfork.getAllUsers();
+		List<UserDto> userDtos = new ArrayList<UserDto>();
+		
+		Iterator<Users> iter = users.iterator();
+		
+		while(iter.hasNext()) {
+			Users u = iter.next();
+			UserDto temp = new UserDto(u.getUId(), u.getName(), u.getEmail(), u.isIsPro());
+			userDtos.add(temp);
+		}
+		
+		return userDtos;
+	}
+	
 	//http://localhost:6212/users/create?name=ed&password=123456&email=adshasdh@aas&isPro=true
 	@PostMapping("/users/create")
 	public UserDto createUserController(@RequestParam(name = "name") String username, @RequestParam(name = "password") String password, @RequestParam(name = "email") String email, @RequestParam(name = "isPro") boolean isPro) {
@@ -125,6 +142,19 @@ public class UserRestController {
 		
 		while(iter.hasNext()) {
 			Recipe r = iter.next();
+			RecipeDto temp = new RecipeDto(r.getName(), r.getAuthor().getName(), r.getRecipeSteps(), r.getRating(), r.getRecipeID());
+			recipeDtos.add(temp);
+		}
+		
+		return recipeDtos;
+	}
+	
+	@GetMapping("/recipe/search")
+	public List<RecipeDto> searchRecipesController(@RequestParam(name = "q") String searchString) {
+		List<Recipe> recipes = freshfork.searchRecipe(searchString);
+		List<RecipeDto> recipeDtos = new ArrayList<RecipeDto>();
+		
+		for(Recipe r : recipes) {
 			RecipeDto temp = new RecipeDto(r.getName(), r.getAuthor().getName(), r.getRecipeSteps(), r.getRating(), r.getRecipeID());
 			recipeDtos.add(temp);
 		}
