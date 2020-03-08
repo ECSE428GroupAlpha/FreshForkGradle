@@ -9,8 +9,7 @@ Feature: Create Diet
   	When I try to create a new diet
   	Then the system will create a new diet
 
-
-  Scenario: Pro user attempts to new diet with same name as existing diet(Error Flow)
+  Scenario: Pro user attempts to new diet with same name as existing diet (Error Flow)
   	
   	Given That i am logged in as a pro user
   	When I try to create a new diet with the same name as an existing diet
