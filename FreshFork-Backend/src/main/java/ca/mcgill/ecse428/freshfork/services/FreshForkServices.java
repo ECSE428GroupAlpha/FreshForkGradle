@@ -49,6 +49,22 @@ public class FreshForkServices {
 	}
 	
 	@Transactional
+	public Boolean changePassword(String email, String existingpassword, String newpassword) {
+		Users user = usersRepository.findByEmail(email);
+		if(user == null) {
+			throw new IllegalArgumentException("incorrect email");
+		}
+		if(user.getPassword().matches(existingpassword)) {
+			user.setPassword(newpassword);
+			return true;
+		}
+		else {
+			throw new IllegalArgumentException("incorrect current password");
+		}
+
+	}
+	
+	@Transactional
 	public Iterable<Users> getAllUsers() {
 		Iterable<Users> allUsers = usersRepository.findAll();
 		
@@ -64,7 +80,9 @@ public class FreshForkServices {
 		if(user == null) {
 			throw new IllegalArgumentException("User does not exist");
 		}
-
+		if(Integer.parseInt(rating) < 0 ) {
+			throw new IllegalArgumentException("Invalid input for rating");
+		}
 		//Checks if user is pro first, otherwise return null
 		if(user.isIsPro()) {
 			recipe.setName(recipeName);
@@ -78,6 +96,7 @@ public class FreshForkServices {
 		}
 	}
 	
+	@Transactional
 	public Recipe addRecipeToDiet (String dietName, int recipeID) {
 		Recipe recipeToAddTo = recipeRepository.findByRecipeID(recipeID);
 		Diet dietToAdd = dietRepository.findByName(dietName);
@@ -99,16 +118,57 @@ public class FreshForkServices {
 			}
 			
 			Set<Diet> diets = recipeToAddTo.getDiet();
+			if(diets == null) {
+				diets = new HashSet<Diet>();
+			}
 			diets.add(dietToAdd);
 			recipeToAddTo.setDiet(diets);
+			
+			Set<Recipe> recipes = dietToAdd.getRecipe();
+			if(recipes == null) {
+				recipes = new HashSet<Recipe>();
+			}
+			recipes.add(recipeToAddTo);
+			dietToAdd.setRecipe(recipes);
+			
+			recipeRepository.save(recipeToAddTo);
+			dietRepository.save(dietToAdd);
 		}
 		
-		return recipeRepository.save(recipeToAddTo);
+		return recipeToAddTo;
+	}
+	
+	@Transactional
+	public Boolean deleteRecipe(int recipeID,Users user) {
+		Recipe recipeToDelete;
+		if(!user.isIsPro()) {
+			throw new IllegalArgumentException("User not pro");
+		}
+		try {
+			recipeToDelete = recipeRepository.findByRecipeID(recipeID);
+		}
+		catch(Exception e) {
+				throw new IllegalArgumentException("Recipe not found");
+		}
+
+		if(recipeToDelete.getAuthor().getUId() != user.getUId()) {
+			throw new IllegalArgumentException("User is not creator");
+		}
+		
+		else {
+			//Store recipeName in new string before deleting recipe
+			recipeRepository.delete(recipeToDelete);
+			return true;
+		}
+		
 	}
 	
 	//DIET METHODS
 	@Transactional
-	public Diet createDiet(String dietName) {
+	public Diet createDiet(String dietName, String email) {
+		if(!usersRepository.findByEmail(email).isIsPro()) {
+			throw new IllegalArgumentException("User is not professional");
+		}
 		Diet diet = new Diet();
 		
 		if(dietRepository.findAllByName(dietName).size() == 1) {
@@ -120,21 +180,35 @@ public class FreshForkServices {
 		
 		return dietRepository.save(diet);
 	}
-
-	@Transactional
-	public Recipe deleteRecipe(int recipeID) {
-		
-		Recipe recipeToDelete = recipeRepository.findByRecipeID(recipeID);
-		if(recipeToDelete == null) {
-			//Recipe could not be found, returning null
-			return null;
+	
+	public Boolean removeDiet(String dietName, String email) {
+		Users user = null;
+		Diet diet=null;
+		try {
+			user = usersRepository.findByEmail(email);
 		}
-		else {
-			//Store recipeName in new string before deleting recipe
-			recipeRepository.delete(recipeToDelete);
-			return recipeToDelete;
+		catch(Exception e) {
+			throw new IllegalArgumentException(e.getCause());
+		}
+		if(user==null) {
+			throw new IllegalArgumentException("Email not found");
+		}
+		if(!user.isIsPro()) {
+			throw new IllegalArgumentException("User not Pro");
+		}
+		diet = dietRepository.findByName(dietName);
+		
+		if(diet==null) {
+			throw new IllegalArgumentException("diet does not exist");
 		}
 		
+		try{
+			dietRepository.delete(diet);
+		}
+		catch(Exception e) {
+			throw new IllegalArgumentException(e.getCause());
+		}
+		return true;
 	}
 
 	@Transactional
@@ -188,7 +262,7 @@ public class FreshForkServices {
 	// AUTHENTICATION
 
 	@Transactional
-	public void authenticateUsers(String email, String password) {
+	public Boolean authenticateUsers(String email, String password) {
 		Users Users = usersRepository.findByEmail(email);
 		
 		if(Users == null) {
@@ -196,7 +270,7 @@ public class FreshForkServices {
 		}
 		else {
 			if(password.equals(Users.getPassword())) {
-				return;
+				return true;
 			}
 			else {
 				throw new IllegalArgumentException("Incorrect password.");
@@ -207,5 +281,28 @@ public class FreshForkServices {
 	@Transactional
 	public List<Diet> getAllDiets() {
 		return dietRepository.findAll();
+	}
+	
+	@Transactional
+	public Diet getDiet(String dietName) {
+		return dietRepository.findByName(dietName);
+	}
+	
+	@Transactional
+	public Recipe getRecipe(int recipeID) {
+		return recipeRepository.findByRecipeID(recipeID);
+	}
+	
+	@Transactional
+	public void deleteUser(int userID) {
+		Users userToDelete = null;
+		//Try and find the user first, if you cant find the user throw an exception
+		userToDelete = usersRepository.findByUId(userID);
+		if(userToDelete == null) {
+			throw new IllegalArgumentException("User not found");
+		}
+		else {
+			usersRepository.delete(userToDelete);
+		}
 	}
 }

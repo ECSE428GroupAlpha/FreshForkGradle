@@ -1,62 +1,29 @@
-Feature: Remove a recipe  
+Feature: Remove a recipe
 
-As a user of FreshFork I would like to remove the recipe I uploaded.  
+  As a Pro user of FreshFork I would like to remove my own recipes
 
-Scenario: Remove a recipe which I added and hasn’t been shared over hundred times.  
+  Scenario: Remove a recipe which I added (Normal Flow)
+  
+    Given I am a pro user 
+    And I have registered recipes on my account 
+    When I request removal of a recipe "Apple Sauce" from my account
+    Then recipe "Apple Sauce" will be removed
 
-I should get a confirmation message the recipe has been removed.  
+  Scenario: Pro User attempts to remove recipe that is not on their account (Error Flow)
+  
+    Given I am a pro user 
+    When I request to delete a recipe that is not mine 
+    Then a remove recipe error "User is not creator" message is issued
+  
+  
+  Scenario:  Non-Pro User attempts to remove recipe(Error FLow)
+  	Given I am a non-pro user 
+    When I request to delete a recipe 
+    Then a remove recipe error "User not pro" message is issued
+    
+  Scenario: User attempts to remove recipe that does not exist (Error Flow)
+  	Given I am a pro user 
+  	When I request to delete a recipe that does not exist
+  	Then a remove recipe error "Recipe not found" message is issued
+    
 
-     Given I am connected to FreshFork with a valid account.  
-
-     When I request a removal of a recipe with:   
-
-    |Title                   |ID|  
-
-    |Sample Recipe           |01| 
-
-     Then the system will verify the user is the creator of the recipe 
-
-     Then the question should appear to verify the removal of the recipe with: 
-
-     |Title                   |ID|  
-
-     |Sample Recipe           |01|
-
-     When I verify 
-
-     Then the recipe will be removed 
-
-     And I will get a message indicating successful removal of: 
-
-     |title|                   
-
-     |Sample Recipe|  
-
-Scenario: Remove a recipe shared over hundred times.  
-
-I should not be able to remove a recipe which has been shared over hundred times. 
-
-     Given I am connected to FreshFork with a valid account. 
-
-     When I request a removal of the recipe with  
-
-     |Number of shares| 
-
-     |101| 
-
-     Then I should receive an error message there’s a restriction to remove the recipe over hundred with: 
-
-     |Number of shares | 
-
-     |101|  
-
-And I should receive the message to email the admin.  
-
- 
-
-Scenario: Remove a recipe which logged in user isn't the creator of the recipe. 
-
-I should not be able to remove a recipe and get reported to the admin for suspicious behavior. 
-    Given I am connected to FreshFork with a valid account. 
-    When I request a recipe I am not the creator of 
-    Then I should receive error message. 

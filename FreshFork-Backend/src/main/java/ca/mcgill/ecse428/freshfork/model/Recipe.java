@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class Recipe{
 private Set<Diet> diet;
 
-@ManyToMany(mappedBy="recipe")
+@ManyToMany(mappedBy="recipe", fetch = FetchType.EAGER)
 public Set<Diet> getDiet() {
    return this.diet;
 }

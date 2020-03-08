@@ -73,10 +73,11 @@ public class UserRestController {
 	}
 	
 	@PostMapping("/users/deleteRecipe")
-	public int deleteRecipeController(@RequestParam(name = "recipeID") int recipeID) {
+	public int deleteRecipeController(@RequestParam(name = "authorID") int creatorID, @RequestParam(name = "recipeID") int recipeID) {
 		//deleteRecipe returns a string, if string is null or empty we did not delete the recipe
-		Recipe tempRecipe = freshfork.deleteRecipe(recipeID);
-		if(tempRecipe == null) {
+		Users user = usersRepository.findByUId(creatorID);
+		Boolean done = freshfork.deleteRecipe(recipeID,user);
+		if(done) {
 			return 1;
 		}
 		else {
@@ -87,9 +88,9 @@ public class UserRestController {
 	
 	//http://localhost:6212/diet/create?dietname=keto
 	@PostMapping("/diet/create")
-	public DietDto createDietController(@RequestParam(name = "dietname") String dietName) {
+	public DietDto createDietController(@RequestParam(name = "dietname") String dietName, @RequestParam(name = "email") String email) {
 		try {
-			Diet tempDiet = freshfork.createDiet(dietName);
+			Diet tempDiet = freshfork.createDiet(dietName,email);
 			DietDto returnDiet = new DietDto(tempDiet.getName());
 			return returnDiet;
 		}

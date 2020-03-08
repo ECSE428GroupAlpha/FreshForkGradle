@@ -23,7 +23,7 @@ public void setUsers(Set<Users> Userss) {
 
 private Set<Recipe> recipe;
 
-@ManyToMany
+@ManyToMany(fetch = FetchType.EAGER)
 public Set<Recipe> getRecipe() {
    return this.recipe;
 }
