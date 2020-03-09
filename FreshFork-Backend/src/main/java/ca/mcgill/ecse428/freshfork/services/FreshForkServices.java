@@ -288,7 +288,7 @@ public class FreshForkServices {
 
 	@Transactional
 	public List<Diet> getAllDiets(String email) {
-Users Users = usersRepository.findByEmail(email);
+		Users Users = usersRepository.findByEmail(email);
 		
 		if(Users == null) {
 			throw new IllegalArgumentException("Account with given email does not exist.");
