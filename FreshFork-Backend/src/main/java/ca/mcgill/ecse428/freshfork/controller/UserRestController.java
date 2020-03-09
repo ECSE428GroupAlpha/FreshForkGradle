@@ -121,8 +121,8 @@ public class UserRestController {
 	
 	//http://localhost:6212/recipe/filterByDiet?dietname=keto
 	@GetMapping("/recipe/filterByDiet")
-	public List<RecipeDto> filterRecipesByDietController(@RequestParam(name = "dietname") String dietName) {
-		List<Recipe> recipes = freshfork.filterRecipeByDiet(dietName);
+	public List<RecipeDto> filterRecipesByDietController(@RequestParam(name = "dietname") String dietName,@RequestParam(name = "e") String email) {
+		List<Recipe> recipes = freshfork.filterRecipeByDiet(dietName,email);
 		List<RecipeDto> recipeDtos = new ArrayList<RecipeDto>();
 		
 		for(Recipe r : recipes) {

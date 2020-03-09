@@ -212,7 +212,11 @@ public class FreshForkServices {
 	}
 
 	@Transactional
-	public List<Recipe> filterRecipeByDiet(String dietName) {
+	public List<Recipe> filterRecipeByDiet(String dietName, String email) {
+		Users user = usersRepository.findByEmail(email);
+		if(user==null) {
+			throw new IllegalArgumentException("User not found");
+		}
 		List<Recipe> ret = new ArrayList<Recipe>();
 		Diet dietToFilterBy = dietRepository.findByName(dietName);
 		Iterable<Recipe> allRecipes = recipeRepository.findAll();

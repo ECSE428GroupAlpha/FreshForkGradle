@@ -18,3 +18,9 @@ Feature: Filter recipes
 		But there are no diets
     When I choose to filter recipes by diet
     Then The system returns a filter recipe error message "Diet does not exist."
+    
+  Scenario: Non user tries to filter diet(Error Flow)
+  	
+  	Given I am not a user of the freshfork system
+  	When I choose to filter recipes by diet
+  	Then The system returns a filter recipe error message "User not found"

@@ -47,7 +47,12 @@ public class FilterRecipeStepDefinitions {
     @Given("I am a user of the freshfork system")
     public void i_am_a_user_of_the_freshfork_system() {
     	user = freshForkServices.createUser("filterrecipestest"+rand,"filterrecipetest"+rand+"@gmail.com" , "password", true);
+    	userEmail = user.getEmail();
  
+    }
+    @Given("I am not a user of the freshfork system")
+    public void i_am_not_a_user_of_the_freshfork_system() {
+        userEmail = "thisisnotreal";
     }
 
     @Given("there are diets in the freshfork system")
@@ -74,7 +79,7 @@ public class FilterRecipeStepDefinitions {
     @When("I choose to filter recipes by diet")
     public void i_choose_to_filter_recipes_by_diet() {
         try {
-        	recipes = freshForkServices.filterRecipeByDiet("dietfilter"+rand);
+        	recipes = freshForkServices.filterRecipeByDiet("dietfilter"+rand,userEmail);
         }
         catch(Exception e) {
         	error = e.getMessage();
